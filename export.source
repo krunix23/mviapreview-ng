@@ -1,0 +1,12 @@
+
+export OE_QMAKE_CC=arm-angstrom-linux-gnueabi-gcc
+export OE_QMAKE_CXX=arm-angstrom-linux-gnueabi-g++
+export OE_QMAKE_LINK=arm-angstrom-linux-gnueabi-g++
+export OE_QMAKE_INCDIR_QT=/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr/include/qt4
+export OE_QMAKE_LIBDIR_QT=/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr/lib
+export OE_QMAKE_MOC=moc
+export OE_QMAKE_RCC=rcc
+export OE_QMAKE_UIC=uic
+
+qmake -spec /usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr/share/qt4/mkspecs/linux-g++ -o Makefile.Arm mviaPreviewArm.pro
+
