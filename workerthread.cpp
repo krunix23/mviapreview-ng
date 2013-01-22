@@ -2,7 +2,7 @@
 
 //-----------------------------------------------------------------------------
 WorkerThread::WorkerThread( DeviceManager *pDevMgr_, QObject* parent ) : QThread(parent),
-pDevMgr(pDevMgr_), DoRunThread(false), frameNr(0)
+pDevMgr(pDevMgr_), pDev(0), DoRunThread(false), frameNr(0)
 //-----------------------------------------------------------------------------
 {
 	iWidth = 640;
@@ -164,7 +164,7 @@ void WorkerThread::OpenVirtualDevice(void)
 void WorkerThread::StartThread()
 //-----------------------------------------------------------------------------
 {
-    if( !isRunning() && !DoRunThread )
+    if( pDev && !isRunning() && !DoRunThread )
     {
         DoRunThread = true;
         pGL->VideoEnable(true);

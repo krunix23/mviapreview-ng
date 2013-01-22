@@ -21,11 +21,11 @@ class WorkerThread : public QThread
     void run(void);
 
 	DeviceManager*         pDevMgr;
+    Device*                pDev;
     unsigned int           iWidth;
     unsigned int           iHeight;
     bool                   DoRunThread;
     GLESWidget*            pGL;
-    Device*                pDev;
     FunctionInterface*     pFI;
     bool                   IsColorSensor;
     int                    frameNr;

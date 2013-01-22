@@ -1,0 +1,22 @@
+Qt 4.7.x must be installed
+for BLX, toolchain must be installed under /usr/local/angstrom/arm
+$MVIMPACT_ACQUIRE_DIR must be set
+
+
+build on linux for x86 linux:
+-------------------------------------------------------------------------------
+qmake mviaPreview.pro
+make clean all
+
+
+build on linux for BLX (ARM)
+-------------------------------------------------------------------------------
+. export.source
+make -f Makefile.Arm clean all
+
+
+build on Win for Win (Visual Studio)
+-------------------------------------------------------------------------------
+qmake.exe -tp vc mviaPreview.pro
+
+
