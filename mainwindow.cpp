@@ -19,6 +19,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionWhitBalance->setIconText(QString("AWB"));
     ui->actionAutoExposure->setIcon(QIcon(":/sun.ico"));
     ui->actionAutoExposure->setIconText(QString("AE"));
+    
+    ui->actionWhitBalance->setEnabled(false);
+    ui->actionAutoExposure->setEnabled(false);
 
     ui->mainToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     ui->mainToolBar->addSeparator();
@@ -35,8 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	pWorker_ = new WorkerThread(pDevMgr, this);
     pWorker_->AttachGLWidget(pGLESWidget_);
-    pWorker_->OpenDevice(w, h);
-    
+        
     connect( pWorker_, SIGNAL(DoLoadTexture(unsigned char*)), pGLESWidget_, SLOT(DoLoadTexture(unsigned char*)) );
     connect( pWorker_, SIGNAL(DoUpdateGL(int)), pGLESWidget_, SLOT(DoUpdateGL(int)) );
     
@@ -44,6 +46,10 @@ MainWindow::MainWindow(QWidget *parent) :
     
     connect( this, SIGNAL(DoWhiteBalanceIA(bool)), pWorker_, SLOT(DoWhiteBalanceIA(bool)) );
     connect( this, SIGNAL(DoAutoExposureIA(bool)), pWorker_, SLOT(DoAutoExposureIA(bool)) );
+    
+    connect( pWorker_, SIGNAL(EnableMenuActions(void)), this, SLOT(EnableMenuActions(void)) );
+    
+    pWorker_->OpenDevice(w, h);
 }
 
 //-----------------------------------------------------------------------------
@@ -99,4 +105,12 @@ void MainWindow::UpdateStatusBar( QString message )
 //-----------------------------------------------------------------------------
 {
     ui->statusBar->showMessage(message);
+}
+
+//-----------------------------------------------------------------------------
+void MainWindow::EnableMenuActions( void )
+//-----------------------------------------------------------------------------
+{
+	ui->actionWhitBalance->setEnabled(true);
+    ui->actionAutoExposure->setEnabled(true);
 }

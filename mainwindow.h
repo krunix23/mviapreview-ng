@@ -37,6 +37,7 @@ public:
 public slots:
     void DoUpdateGL( int reqNr );
     void UpdateStatusBar( QString message );
+    void EnableMenuActions( void );
 
 private slots:
     void on_actionLive_toggled(bool arg1);
@@ -48,7 +49,6 @@ signals:
     void DoWhiteBalanceIA(bool arg);
     void DoAutoExposureIA(bool arg);
     void UpdateGL( int reqNr ); //unused
-
 };
 
 #endif // MAINWINDOW_H

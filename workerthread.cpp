@@ -83,6 +83,7 @@ void WorkerThread::OpenBlueLYNXDevice(void)
         ac.triggerMode.writeS( "On" );
         
         pGL->SetVideoSrcIsYUV(true);
+        emit EnableMenuActions(); // AWB & AE
     }
 }
 

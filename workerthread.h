@@ -42,6 +42,7 @@ signals:
     void DoLoadTexture( unsigned char* inbuffer );
     void DoUpdateGL( int reqNr );
     void DoUpdateStatusBar( QString message );
+    void EnableMenuActions( void );
 
 public:
     WorkerThread( DeviceManager *pDevMgr_, QObject* parent = 0 );
