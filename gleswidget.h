@@ -34,6 +34,7 @@ class GLESWidget : public QGLWidget
     QMutex                 VideoSyncMutex;
     bool                   IsInitialised;
     bool                   VideoSrcIsYUV;
+    bool                   TextureLoaded;
     
     char* LoadShader( std::string filename );
     

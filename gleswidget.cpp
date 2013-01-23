@@ -7,7 +7,7 @@ using namespace mv;
 //-----------------------------------------------------------------------------
 GLESWidget::GLESWidget(unsigned int w, unsigned int h, QWidget *parent) :
     QGLWidget(QGLFormat(QGL::DirectRendering), parent),
-    frameNr(0), AcquisitionStarted(false), IsInitialised(false), VideoSrcIsYUV(false)
+    frameNr(0), AcquisitionStarted(false), IsInitialised(false), VideoSrcIsYUV(false), TextureLoaded(false)
 //-----------------------------------------------------------------------------
 {
     setAttribute(Qt::WA_PaintOnScreen);
@@ -90,6 +90,8 @@ void GLESWidget::DoLoadTexture( unsigned char* inbuffer )
 	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
     doneCurrent();
+    
+    TextureLoaded = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -221,8 +223,9 @@ void GLESWidget::DoPaint(void)
 void GLESWidget::paintGL()
 //-----------------------------------------------------------------------------
 {
-    if(AcquisitionStarted)
+    if( AcquisitionStarted && TextureLoaded )
     {
+        TextureLoaded = false;
         DoPaint();
         IsInitialised = true;
     }
