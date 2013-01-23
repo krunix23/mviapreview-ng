@@ -29,11 +29,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     pDevMgr = new DeviceManager();
     
-    pGLESWidget_ = new GLESWidget(640, 480, ui->widget);
+    unsigned int w = 640, h = 480;
+    
+    pGLESWidget_ = new GLESWidget(w, h, ui->widget);
 
 	pWorker_ = new WorkerThread(pDevMgr, this);
     pWorker_->AttachGLWidget(pGLESWidget_);
-    pWorker_->OpenDevice();
+    pWorker_->OpenDevice(w, h);
     
     connect( pWorker_, SIGNAL(DoLoadTexture(unsigned char*)), pGLESWidget_, SLOT(DoLoadTexture(unsigned char*)) );
     connect( pWorker_, SIGNAL(DoUpdateGL(int)), pGLESWidget_, SLOT(DoUpdateGL(int)) );

@@ -46,7 +46,7 @@ signals:
 public:
     WorkerThread( DeviceManager *pDevMgr_, QObject* parent = 0 );
     void AttachGLWidget( GLESWidget* pGL_ ) { pGL = pGL_; }
-    void OpenDevice(void);
+    void OpenDevice(unsigned int w, unsigned int h);
     void StartThread( void );
     void StopThread( void );
     

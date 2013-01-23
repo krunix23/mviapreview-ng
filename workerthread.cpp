@@ -10,9 +10,12 @@ pDevMgr(pDevMgr_), pDev(0), DoRunThread(false), frameNr(0)
 }
 
 //-----------------------------------------------------------------------------
-void WorkerThread::OpenDevice( void )
+void WorkerThread::OpenDevice( unsigned int w, unsigned int h )
 //-----------------------------------------------------------------------------
 {
+	iWidth = w;
+	iHeight = h;
+	
 #if defined(ARM)
     OpenBlueLYNXDevice();
     //OpenVirtualDevice();

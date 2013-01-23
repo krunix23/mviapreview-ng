@@ -2,6 +2,8 @@
 
 using namespace mv;
 
+#define DEFAULT_WIDGET_WIDTH 640
+#define DEFAULT_WIDGET_HEIGHT 480
 //-----------------------------------------------------------------------------
 GLESWidget::GLESWidget(unsigned int w, unsigned int h, QWidget *parent) :
     QGLWidget(QGLFormat(QGL::DirectRendering), parent),
@@ -18,7 +20,7 @@ GLESWidget::GLESWidget(unsigned int w, unsigned int h, QWidget *parent) :
     fWidth = static_cast<float>(iWidth);
     fHeight = static_cast<float>(iHeight);
 
-    setFixedSize(w, h);
+    setFixedSize(DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT);
 }
 
 //-----------------------------------------------------------------------------
@@ -167,6 +169,15 @@ void GLESWidget::DoPaint(void)
         return;
     }
 
+    /*GLfloat vVertices[] = { -0.5f,  0.5f, 0.0f,  // Position 0
+                             0.0f,  0.0f,        // TexCoord 0
+                            -0.5f, -0.5f, 0.0f,  // Position 1
+                             0.0f,  1.0f,        // TexCoord 1
+                             0.5f, -0.5f, 0.0f,  // Position 2
+                             1.0f,  1.0f,        // TexCoord 2
+                             0.5f,  0.5f, 0.0f,  // Position 3
+                             1.0f,  0.0f         // TexCoord 3
+                           };*/
     GLfloat vVertices[] = { -1.0f,  1.0f, 0.0f,  // Position 0
                              0.0f,  0.0f,        // TexCoord 0
                             -1.0f, -1.0f, 0.0f,  // Position 1
@@ -176,11 +187,12 @@ void GLESWidget::DoPaint(void)
                              1.0f,  1.0f, 0.0f,  // Position 3
                              1.0f,  0.0f         // TexCoord 3
                            };
+    
     GLubyte indices[] = { 0, 1, 2, 0, 2, 3 };
 
     // Set the viewport
-    glViewport ( 0, 0, 640, 480 );
-
+    glViewport ( 0, 0, DEFAULT_WIDGET_WIDTH, DEFAULT_WIDGET_HEIGHT );
+    
     // Clear the color buffer
     glClear ( GL_COLOR_BUFFER_BIT );
 
