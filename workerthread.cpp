@@ -60,6 +60,7 @@ void WorkerThread::OpenBlueLYNXDevice(void)
         ifc.height.write( iHeight );
         ifc.offsetX.write( xoff );
         ifc.offsetY.write( yoff );
+		
         try
         {
         	ifc.pixelFormat.writeS( "YUV422Packed" );
@@ -99,11 +100,11 @@ void WorkerThread::OpenBlueFOXDevice(void)
 
         pFI = new FunctionInterface(pDev);
 
-        SystemSettings sys(pDev);
-        CameraSettingsBase cs(pDev);
-        CameraSettingsBlueFOX csbf(pDev);
-        ImageDestination id(pDev);
-
+        mvIMPACT::acquire::SystemSettings sys(pDev);
+        mvIMPACT::acquire::CameraSettingsBase cs(pDev);
+        mvIMPACT::acquire::CameraSettingsBlueFOX csbf(pDev);
+        mvIMPACT::acquire::ImageDestination id(pDev);
+		
         int maxw = cs.aoiWidth.getMaxValue();
         int maxh = cs.aoiHeight.getMaxValue();
 
@@ -140,10 +141,10 @@ void WorkerThread::OpenVirtualDevice(void)
 
         pFI = new FunctionInterface(pDev);
 
-        SystemSettings sys(pDev);
-        CameraSettingsVirtualDevice csvd(pDev);
-        CameraSettingsBase cs(pDev);
-        ImageDestination id(pDev);
+        mvIMPACT::acquire::SystemSettings sys(pDev);
+        mvIMPACT::acquire::CameraSettingsVirtualDevice csvd(pDev);
+        mvIMPACT::acquire::CameraSettingsBase cs(pDev);
+        mvIMPACT::acquire::ImageDestination id(pDev);
 
         cs.aoiWidth.write(iWidth);
         cs.aoiHeight.write(iHeight);
