@@ -118,31 +118,21 @@ void GLESWidget::initializeGL()
     vshader1->compileSourceCode(vsrc1);
 
     QGLShader *fshader1 = new QGLShader(QGLShader::Fragment, this);
+	
+	#ifdef ARM
+	fshader1->compileSourceFile( QString("mvshader_gles.frag") );
+	#else
+	fshader1->compileSourceFile( QString("mvshader_gl.frag") );
+	#endif
 
-    if( VideoSrcIsYUV )
-    {
-	    #ifdef ARM
-        fshader1->compileSourceFile( QString("yuv2rgb_gles.frag") );
-        #else
-        fshader1->compileSourceFile( QString("yuv2rgb_gl.frag") );
-        #endif
-    }
-    else
-    {
-        #ifdef ARM
-        fshader1->compileSourceFile( QString("rgb2rgb_gles.frag") );
-        #else
-        fshader1->compileSourceFile( QString("rgb2rgb_gl.frag") );
-        #endif
-    }
-
-    ShaderProgram_.addShader(vshader1);
+	ShaderProgram_.addShader(vshader1);
     ShaderProgram_.addShader(fshader1);
     ShaderProgram_.link();
 
     // Actually use the created program
     ShaderProgram_.bind();
 
+	ShaderProgram_.setUniformValue(ShaderProgram_.uniformLocation("isYUV"), 0);
     ShaderProgram_.setUniformValue(ShaderProgram_.uniformLocation("s_baseMap"), 0);
     ShaderProgram_.setUniformValue(ShaderProgram_.uniformLocation("texture_width"), (GLfloat)fWidth);
     ShaderProgram_.setUniformValue(ShaderProgram_.uniformLocation("texel_width"), (GLfloat)(1.0/fWidth));
@@ -197,7 +187,7 @@ void GLESWidget::DoPaint(void)
     
     // Clear the color buffer
     glClear ( GL_COLOR_BUFFER_BIT );
-
+	
     GLint positionLoc = ShaderProgram_.attributeLocation("a_position");
     GLint texCoordLoc = ShaderProgram_.attributeLocation("a_texCoord");
 
@@ -208,6 +198,11 @@ void GLESWidget::DoPaint(void)
 
     ShaderProgram_.enableAttributeArray(positionLoc);
     ShaderProgram_.enableAttributeArray(texCoordLoc);
+	
+	if( VideoSrcIsYUV )
+		ShaderProgram_.setUniformValue(ShaderProgram_.uniformLocation("isYUV"), 1);
+	else
+		ShaderProgram_.setUniformValue(ShaderProgram_.uniformLocation("isYUV"), 0);
 
     //glActiveTexture ( GL_TEXTURE0 );
     glBindTexture ( GL_TEXTURE_2D, baseMapTexId );

@@ -10,34 +10,42 @@ pDevMgr(pDevMgr_), pDev(0), DoRunThread(false), frameNr(0)
 }
 
 //-----------------------------------------------------------------------------
-void WorkerThread::OpenDevice( unsigned int w, unsigned int h )
+void WorkerThread::OpenDevice( unsigned int index, unsigned int w, unsigned int h )
 //-----------------------------------------------------------------------------
 {
 	iWidth = w;
 	iHeight = h;
 	
-#if defined(ARM)
-    OpenBlueLYNXDevice();
-    //OpenVirtualDevice();
-#else
-    OpenBlueFOXDevice();
-    //OpenVirtualDevice();
-#endif
+	if( pDev && pDevMgr->getDevice(index)->serial.readS().compare(pDev->serial.readS()) )
+	{
+		printf("Closing device %s.\n", pDev->serial.readS().c_str() );
+		pDev->close();
+	}
+	
+	pDev = pDevMgr->getDevice(index);
+	
+	if( !pDev->family.readS().compare("mvBlueFOX") )
+		OpenBlueFOXDevice();
+	else if( !pDev->family.readS().compare("mvVirtualDevice") )
+		OpenVirtualDevice();
+	else if( !pDev->family.readS().compare("mvBlueLYNX") )
+		OpenBlueLYNXDevice();
 }
 
 //-----------------------------------------------------------------------------
 void WorkerThread::OpenBlueLYNXDevice(void)
 //-----------------------------------------------------------------------------
 {
-    pDev = pDevMgr->getDeviceBySerial(std::string("LX*"));
-
     if(pDev)
     {
-        pDev->interfaceLayout.write( dilGenICam );
-        pDev->open();
+		if( !pDev->isOpen() )
+		{
+			pDev->interfaceLayout.write( dilGenICam );
+			pDev->open();
+		}
 
         SystemSettings sys(pDev);
-        sys.requestCount.write(16);
+        sys.requestCount.write(4);
 
         pFI = new FunctionInterface(pDev);
 
@@ -74,7 +82,7 @@ void WorkerThread::OpenBlueLYNXDevice(void)
         }
 
         ac.acquisitionMode.writeS( "Continuous" );
-        ac.exposureTime.write(2000.0);
+        ac.exposureTime.write(20000.0);
 
         ctc.timerSelector.writeS( "Timer1" );
         ctc.timerTriggerSource.writeS( "Timer1End" );
@@ -84,7 +92,7 @@ void WorkerThread::OpenBlueLYNXDevice(void)
         ac.triggerMode.writeS( "On" );
         
         pGL->SetVideoSrcIsYUV(true);
-        emit EnableMenuActions(); // AWB & AE
+        emit EnableMenuActions(true); // AWB & AE
     }
 }
 
@@ -92,15 +100,13 @@ void WorkerThread::OpenBlueLYNXDevice(void)
 void WorkerThread::OpenBlueFOXDevice(void)
 //-----------------------------------------------------------------------------
 {
-    pDev = pDevMgr->getDeviceBySerial(std::string("BF*"));
-
     if(pDev)
     {
-        pDev->open();
+		if( !pDev->isOpen() )
+			pDev->open();
 
         pFI = new FunctionInterface(pDev);
 
-        mvIMPACT::acquire::SystemSettings sys(pDev);
         mvIMPACT::acquire::CameraSettingsBase cs(pDev);
         mvIMPACT::acquire::CameraSettingsBlueFOX csbf(pDev);
         mvIMPACT::acquire::ImageDestination id(pDev);
@@ -120,12 +126,12 @@ void WorkerThread::OpenBlueFOXDevice(void)
         cs.aoiHeight.write(iHeight);
         cs.aoiStartX.write(xoff);
         cs.aoiStartY.write(yoff);
-        sys.requestCount.write(16);
         csbf.pixelClock_KHz.write(cpc40000KHz);
         csbf.expose_us.write(20000);
         id.pixelFormat.write(idpfRGBx888Packed);
         
         pGL->SetVideoSrcIsYUV(false);
+		emit EnableMenuActions(false); // AWB & AE
     }
 }
 
@@ -133,15 +139,13 @@ void WorkerThread::OpenBlueFOXDevice(void)
 void WorkerThread::OpenVirtualDevice(void)
 //-----------------------------------------------------------------------------
 {
-    pDev = pDevMgr->getDeviceBySerial(std::string("VD000001"));
-
     if(pDev)
     {
-        pDev->open();
+		if( !pDev->isOpen() )
+			pDev->open();
 
         pFI = new FunctionInterface(pDev);
 
-        mvIMPACT::acquire::SystemSettings sys(pDev);
         mvIMPACT::acquire::CameraSettingsVirtualDevice csvd(pDev);
         mvIMPACT::acquire::CameraSettingsBase cs(pDev);
         mvIMPACT::acquire::ImageDestination id(pDev);
@@ -150,7 +154,6 @@ void WorkerThread::OpenVirtualDevice(void)
         cs.aoiHeight.write(iHeight);
         cs.aoiStartX.write(0);
         cs.aoiStartY.write(0);
-        sys.requestCount.write(16);
 
         #ifdef ARM
         csvd.frameDelay_us.write(40000);
@@ -162,6 +165,7 @@ void WorkerThread::OpenVirtualDevice(void)
         id.pixelFormat.write(idpfRGBx888Packed);
         
         pGL->SetVideoSrcIsYUV(false);
+		emit EnableMenuActions(false); // AWB & AE
     }
 }
 
@@ -298,7 +302,7 @@ void WorkerThread::DoWhiteBalanceIA(bool arg)
         if( arg )
             pc.mvBalanceWhiteAuto.writeS("Continuous");
         else
-            pc.mvBalanceWhiteAuto.writeS("Off"); // 2 | Off
+            pc.mvBalanceWhiteAuto.writeS("Off"); // 2 || Off
     }
 }
 

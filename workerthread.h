@@ -20,15 +20,15 @@ class WorkerThread : public QThread
 
     void run(void);
 
-	DeviceManager*         pDevMgr;
-    Device*                pDev;
-    unsigned int           iWidth;
-    unsigned int           iHeight;
-    bool                   DoRunThread;
-    GLESWidget*            pGL;
-    FunctionInterface*     pFI;
-    bool                   IsColorSensor;
-    int                    frameNr;
+	mvIMPACT::acquire::DeviceManager*         pDevMgr;
+    mvIMPACT::acquire::Device*                pDev;
+    unsigned int                              iWidth;
+    unsigned int                              iHeight;
+    bool                                      DoRunThread;
+    GLESWidget*                               pGL;
+    FunctionInterface*                        pFI;
+    bool                                      IsColorSensor;
+    int                                       frameNr;
     
     void OpenBlueLYNXDevice(void);
     void OpenBlueFOXDevice(void);
@@ -42,12 +42,12 @@ signals:
     void DoLoadTexture( unsigned char* inbuffer );
     void DoUpdateGL( int reqNr );
     void DoUpdateStatusBar( QString message );
-    void EnableMenuActions( void );
+    void EnableMenuActions( bool arg );
 
 public:
     WorkerThread( DeviceManager *pDevMgr_, QObject* parent = 0 );
     void AttachGLWidget( GLESWidget* pGL_ ) { pGL = pGL_; }
-    void OpenDevice(unsigned int w, unsigned int h);
+    void OpenDevice(unsigned int index, unsigned int w, unsigned int h);
     void StartThread( void );
     void StopThread( void );
     

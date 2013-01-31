@@ -5,10 +5,14 @@
 #include <mvIMPACT_CPP/mvIMPACT_acquire.h>
 #include <gleswidget.h>
 #include <workerthread.h>
+#include <stdlib.h>
+#include <string>
+#include <map>
 
 #include <mvIMPACT_CPP/mvIMPACT_acquire.h>
 
 using namespace mv;
+using namespace std;
 
 namespace Ui {
     class MainWindow;
@@ -26,10 +30,15 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
-	DeviceManager* pDevMgr;
+	unsigned int iWidth;
+	unsigned int iHeight;
+	QComboBox *ComboBoxDevices;
+	mvIMPACT::acquire::DeviceManager* pDevMgr;
     WorkerThread* pWorker_;
     GLESWidget* pGLESWidget_;
+	QSet<unsigned int> DeviceSet;
+	
+	void DetectDevices(void);
 
 public:
     QWidget* GLWidget(void);
@@ -37,7 +46,7 @@ public:
 public slots:
     void DoUpdateGL( int reqNr );
     void UpdateStatusBar( QString message );
-    void EnableMenuActions( void );
+    void EnableMenuActions( bool arg );
 
 private slots:
     void on_actionLive_toggled(bool arg1);
