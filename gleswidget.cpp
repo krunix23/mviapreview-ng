@@ -1,7 +1,5 @@
 #include "gleswidget.h"
 
-using namespace mv;
-
 #define DEFAULT_WIDGET_WIDTH 640
 #define DEFAULT_WIDGET_HEIGHT 480
 //-----------------------------------------------------------------------------

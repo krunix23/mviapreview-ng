@@ -11,10 +11,7 @@
 #include <string>
 #include <QMutex>
 
-#include <osAbstraction/Include/osAbstraction.h>
-
 using namespace std;
-using namespace mv;
 
 //-----------------------------------------------------------------------------
 class GLESWidget : public QGLWidget
